@@ -2,8 +2,7 @@ package ru.nsu.romanov.filter.command;
 
 import lombok.Getter;
 import picocli.CommandLine;
-import ru.nsu.romanov.filter.service.ServiceFilter;
-
+import ru.nsu.romanov.filter.service.Service;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,7 +27,7 @@ public class CommandLineRunner implements Runnable{
     @Override
     public void run() {
         try {
-            new ServiceFilter(this).run();
+            new Service(this).start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

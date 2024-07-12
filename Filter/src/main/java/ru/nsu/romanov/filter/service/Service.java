@@ -2,37 +2,36 @@ package ru.nsu.romanov.filter.service;
 
 import ru.nsu.romanov.filter.command.CommandLineRunner;
 import ru.nsu.romanov.filter.service.parser.Parser;
-import ru.nsu.romanov.filter.service.writer.Writer;
-
+import ru.nsu.romanov.filter.service.writer.WriterFile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class ServiceFilter {
-    public ServiceFilter(CommandLineRunner commandLineRunner) {
+public class Service {
+    public Service(CommandLineRunner commandLineRunner) {
         this.commandLineRunner = commandLineRunner;
         validateCommandLineParameters();
     }
 
-    public void run() throws IOException {
+    public void start() throws IOException {
         var parser = new Parser(List.of(commandLineRunner.getFiles()));
         parser.parseFiles();
 
         writeStatistics(parser);
 
-        writeRes(parser);
+        writeResults(parser);
     }
 
-    private void writeRes(Parser parser) throws IOException {
-        new Writer<>(
+    private void writeResults(Parser parser) throws IOException {
+        new WriterFile<>(
                 parser.getStatisticsInteger().getElements(),
                 "integers.txt",
                 commandLineRunner.getPath(),
                 commandLineRunner.getPrefix(),
                 commandLineRunner.isRewrite()
-        ).write();
+        );
 
-        new Writer<>(
+        new WriterFile<>(
                 parser.getStatisticsFloat().getElements(),
                 "floats.txt",
                 commandLineRunner.getPath(),
@@ -40,7 +39,7 @@ public class ServiceFilter {
                 commandLineRunner.isRewrite()
         ).write();
 
-        new Writer<>(
+        new WriterFile<>(
                 parser.getStatisticsString().getElements(),
                 "strings.txt",
                 commandLineRunner.getPath(),
