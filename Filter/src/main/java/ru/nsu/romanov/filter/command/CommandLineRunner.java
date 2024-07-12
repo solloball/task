@@ -2,9 +2,10 @@ package ru.nsu.romanov.filter.command;
 
 import lombok.Getter;
 import picocli.CommandLine;
-import ru.nsu.romanov.filter.service.Filter;
+import ru.nsu.romanov.filter.service.ServiceFilter;
 
 import java.io.File;
+import java.io.IOException;
 
 @Getter
 @CommandLine.Command(
@@ -21,12 +22,15 @@ public class CommandLineRunner implements Runnable{
     private String prefix;
     @CommandLine.Option(names = "-a", description = "is rewrite file")
     private boolean isRewrite;
-    @Getter
     @CommandLine.Parameters(paramLabel = "FILE", description = "one or more files to filter")
     File[] files;
 
     @Override
     public void run() {
-        new Filter(this).run();
+        try {
+            new ServiceFilter(this).run();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
