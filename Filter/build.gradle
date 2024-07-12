@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group = 'ru.nsu.romanov.filter'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    // https://mvnrepository.com/artifact/info.picocli/picocli
+    implementation group: 'info.picocli', name: 'picocli', version: '4.7.6'
+    annotationProcessor 'info.picocli:picocli-codegen:4.7.6'
+}
+
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,2 +1,2 @@
 # task
-CLI reader file
+CLI simple filter file
