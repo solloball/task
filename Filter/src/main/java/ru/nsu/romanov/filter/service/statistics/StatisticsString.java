@@ -2,6 +2,9 @@ package ru.nsu.romanov.filter.service.statistics;
 
 import lombok.Getter;
 
+/**
+ * Statistics for string value.
+ */
 @Getter
 public class StatisticsString extends Statistics<java.lang.String> {
     @Override
@@ -17,8 +20,9 @@ public class StatisticsString extends Statistics<java.lang.String> {
         }
     }
 
-    public String full() {
-        return brief()
+    public String fullInfo() {
+        return briefInfo()
+            + "\ntype: String"
             + "\nstring with min len: "
             + stringMinLen
             + "\nstring with max len: "

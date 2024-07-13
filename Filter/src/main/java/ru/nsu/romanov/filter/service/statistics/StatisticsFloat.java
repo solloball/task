@@ -4,6 +4,9 @@ import lombok.Getter;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+/**
+ * Statistics for float value.
+ */
 @Getter
 public class StatisticsFloat extends Statistics<Float> {
     @Override
@@ -26,8 +29,9 @@ public class StatisticsFloat extends Statistics<Float> {
         return sum / super.getElements().size();
     }
 
-    public String full() {
-        return brief()
+    public String fullInfo() {
+        return briefInfo()
+            + "\ntype: Float"
             + "\nmax: "
             + max
             + "\nmin: "

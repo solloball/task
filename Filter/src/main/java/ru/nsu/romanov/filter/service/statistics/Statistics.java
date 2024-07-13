@@ -16,10 +16,8 @@ public abstract class Statistics<T> {
         internalLogic(elem);
     }
 
-    public String brief() {
-        return "\nStatistics:\n"
-                + "Count: "
-                + elements.size();
+    public String briefInfo() {
+        return "\nStatistics:\nCount: " + elements.size();
     }
 
     abstract void internalLogic(T elem);

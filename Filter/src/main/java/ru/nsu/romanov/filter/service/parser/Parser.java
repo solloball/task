@@ -41,7 +41,7 @@ public class Parser {
                 }  catch (NumberFormatException ignored) {
                 }
 
-                statisticsString.add(line); // it is a line.
+                statisticsString.add(line); // it is a string.
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

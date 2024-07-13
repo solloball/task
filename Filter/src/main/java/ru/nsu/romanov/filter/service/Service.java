@@ -1,20 +1,26 @@
 package ru.nsu.romanov.filter.service;
 
-import ru.nsu.romanov.filter.command.CommandLineRunner;
+import ru.nsu.romanov.filter.service.config.Config;
 import ru.nsu.romanov.filter.service.parser.Parser;
 import ru.nsu.romanov.filter.service.writer.WriterFile;
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Main service of program.
+ * Validate input file, run parser, write statistics to stdout,
+ * write list of object to files.
+ */
 public class Service {
-    public Service(CommandLineRunner commandLineRunner) {
-        this.commandLineRunner = commandLineRunner;
+    public Service(Config config, File[] files) {
+        this.config = config;
+        this.files = List.of(files);
         validateCommandLineParameters();
     }
 
     public void start() throws IOException {
-        var parser = new Parser(List.of(commandLineRunner.getFiles()));
+        var parser = new Parser(files);
         parser.parseFiles();
 
         writeStatistics(parser);
@@ -26,56 +32,57 @@ public class Service {
         new WriterFile<>(
                 parser.getStatisticsInteger().getElements(),
                 "integers.txt",
-                commandLineRunner.getPath(),
-                commandLineRunner.getPrefix(),
-                commandLineRunner.isRewrite()
-        );
+                config.path(),
+                config.prefix(),
+                config.shouldNotRewrite()
+        ).write();
 
         new WriterFile<>(
                 parser.getStatisticsFloat().getElements(),
                 "floats.txt",
-                commandLineRunner.getPath(),
-                commandLineRunner.getPrefix(),
-                commandLineRunner.isRewrite()
+                config.path(),
+                config.prefix(),
+                config.shouldNotRewrite()
         ).write();
 
         new WriterFile<>(
                 parser.getStatisticsString().getElements(),
                 "strings.txt",
-                commandLineRunner.getPath(),
-                commandLineRunner.getPrefix(),
-                commandLineRunner.isRewrite()
+                config.path(),
+                config.prefix(),
+                config.shouldNotRewrite()
         ).write();
     }
 
     private void writeStatistics(Parser parser) {
-        if (!commandLineRunner.isBrief() && !commandLineRunner.isFull()) {
+        if (!config.isBrief() && !config.isFull()) {
             return;
         }
 
-        if (commandLineRunner.isFull()) {
-            System.out.println(parser.getStatisticsInteger().full()
-                + parser.getStatisticsFloat().full()
-                + parser.getStatisticsString().full()
+        if (config.isFull()) {
+            System.out.println(parser.getStatisticsInteger().fullInfo()
+                + parser.getStatisticsFloat().fullInfo()
+                + parser.getStatisticsString().fullInfo()
             );
             return;
         }
 
-        System.out.println(parser.getStatisticsInteger().brief()
-                + parser.getStatisticsFloat().brief()
-                + parser.getStatisticsString().brief()
+        System.out.println(parser.getStatisticsInteger().briefInfo()
+                + parser.getStatisticsFloat().briefInfo()
+                + parser.getStatisticsString().briefInfo()
         );
     }
 
     private void validateCommandLineParameters() {
-        if (commandLineRunner.getFiles().length == 0) {
+        if (files.isEmpty()) {
             throw new IllegalArgumentException("Should be at least one file to read");
         }
 
-        var list = Arrays.stream(commandLineRunner.getFiles()).filter(file -> !file.exists()).toList();
+        var list = files.stream().filter(file -> !file.exists()).toList();
         if (!list.isEmpty()) {
             throw new IllegalArgumentException("Invalid files: " + list);
         }
     }
-    private final CommandLineRunner commandLineRunner;
+    private final Config config;
+    private final List<File> files;
 }

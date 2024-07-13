@@ -3,9 +3,13 @@ package ru.nsu.romanov.filter.command;
 import lombok.Getter;
 import picocli.CommandLine;
 import ru.nsu.romanov.filter.service.Service;
+import ru.nsu.romanov.filter.service.config.Config;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Parse args, make config and run service.
+ */
 @Getter
 @CommandLine.Command(
     description = "filter input file into three files: integers.txt, floats.txt, strings.txt"
@@ -20,14 +24,20 @@ public class CommandLineRunner implements Runnable{
     @CommandLine.Option(names = "-p", description = "prefix to output file")
     private String prefix;
     @CommandLine.Option(names = "-a", description = "is rewrite file")
-    private boolean isRewrite;
+    private boolean shouldNotRewrite;
     @CommandLine.Parameters(paramLabel = "FILE", description = "one or more files to filter")
     File[] files;
 
     @Override
     public void run() {
         try {
-            new Service(this).start();
+            new Service(new Config(
+                isBrief,
+                isFull,
+                path,
+                prefix,
+                shouldNotRewrite
+            ), files).start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

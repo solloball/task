@@ -4,6 +4,9 @@ import lombok.Getter;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+/**
+ * Statistics for integer value.
+ */
 @Getter
 public class StatisticsInteger extends Statistics<Long> {
 
@@ -20,8 +23,9 @@ public class StatisticsInteger extends Statistics<Long> {
         sum += elem;
     }
 
-    public String full() {
-        return brief()
+    public String fullInfo() {
+        return briefInfo()
+            + "\ntype: Integer"
             + "\nmax: "
             + max
             + "\nmin: "
@@ -32,14 +36,14 @@ public class StatisticsInteger extends Statistics<Long> {
             + getAverage();
     }
 
-    public int getAverage() {
+    public long getAverage() {
         if (super.getElements().isEmpty()) {
             return 0;
         }
-        return sum / super.getElements().size();
+        return  sum / super.getElements().size();
     }
 
     private Long max;
     private Long min;
-    private int sum = 0;
+    private long sum = 0;
 }
